@@ -63,6 +63,17 @@ public class KNN {
     
     private static int maxVacation;
     private static int minVacation;
+    private static int maxeCredit;
+    private static int mineCredit;
+    private static int maxSalary;
+    private static int minSalary;
+    private static int maxproperty;
+    private static int minproperty;
+    
+  
+    
+    
+    
     public static void main(String[] args) throws IOException {
         File trainFile = new File("trainProdSelection.arff");
         BufferedReader trainIn = new BufferedReader(new InputStreamReader(new FileInputStream(trainFile), "UTF-8"));
