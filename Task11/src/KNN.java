@@ -120,15 +120,23 @@ public class KNN {
                 trainList.add(parseCustomer(l));
             }
         }
+              
+//        String testStr = "librarian,spend>>saving,48,35,20,2";
+//        Customer testCus = parseCustomer(testStr);
+//        Map<Customer, Double> topK = getTopK(testCus, 3);
+//        for (Customer cus : topK.keySet()) {
+//        	System.out.println(cus);
+//        }
+//        System.out.print(getPredict(topK));
         
-        
-        String testStr = "librarian,spend>>saving,48,35,20,2";
-        Customer testCus = parseCustomer(testStr);
-        Map<Customer, Double> topK = getTopK(testCus, 3);
-        for (Customer cus : topK.keySet()) {
-        	System.out.println(cus);
+        for (String l = testIn.readLine(); l != null; l = testIn.readLine()) {
+        	if (!l.startsWith("@") && l.length() > 0) {
+        		Customer cus = parseCustomer(l);
+        		Map<Customer, Double> topK = getTopK(cus, 3);
+        		cus.setProduct(getPredict(topK));
+        		System.out.println(cus.toString());
+        	}
         }
-        System.out.print(getPredict(topK));
         
     }
     
