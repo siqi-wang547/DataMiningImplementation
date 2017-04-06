@@ -6,6 +6,10 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 
 public class KNN {
@@ -109,14 +113,6 @@ public class KNN {
             	minProperty = Math.min(minProperty, property);
             }
         }
-//        System.out.println(maxVacation);
-//        System.out.println(minVacation);
-//        System.out.println(maxeCredit);
-//        System.out.println(mineCredit);
-//        System.out.println(maxSalary);
-//        System.out.println(minSalary);
-//        System.out.println(maxProperty);
-//        System.out.println(minProperty);
         
         BufferedReader trainIn1 = new BufferedReader(new InputStreamReader(new FileInputStream(trainFile), "UTF-8"));
         for (String l = trainIn1.readLine(); l != null; l = trainIn1.readLine()) {
@@ -125,24 +121,63 @@ public class KNN {
             }
         }
         
-//        System.out.println(trainList.size());
-//        for (Customer customer : trainList) System.out.println(customer.toString());
         
-        String testStr = "student,spend<<saving,10,15,12,3";
+        String testStr = "librarian,spend>>saving,48,35,20,2";
         Customer testCus = parseCustomer(testStr);
-        System.out.println(getSim(testCus, trainList.get(0)));
-//        
-//        for (String l = testIn.readLine(); l != null; l = testIn.readLine()) {
-//            if (!l.startsWith("@") && l.length() > 0) {
-//                System.out.println(l);
-//            }
-//        }
+        Map<Customer, Double> topK = getTopK(testCus, 3);
+        for (Customer cus : topK.keySet()) {
+        	System.out.println(cus);
+        }
+        System.out.print(getPredict(topK));
+        
+    }
+    
+    private static int getPredict(Map<Customer, Double> customers) {
+    	HashMap<Integer, Double> map = new HashMap<Integer, Double>();
+    	for (Customer cus : customers.keySet()) {
+    		double score = customers.get(cus);
+    		int cls = cus.getProduct();
+    		if (!map.containsKey(cls)) map.put(cls, 0.0);
+    		map.put(cls, map.get(cls) + score);
+    	}
+    	ArrayList<Integer> list = new ArrayList<Integer>(map.keySet());
+    	list.sort(new Comparator<Integer>() {
+
+			@Override
+			public int compare(Integer o1, Integer o2) {
+				return Double.compare(map.get(o2), map.get(o1));
+			}
+    		
+    	});
+    	return list.get(0);
+    }
+    
+    private static Map<Customer, Double> getTopK(Customer target, int k) {
+    	HashMap<Customer, Double> map = new HashMap<Customer, Double>();
+    	for (Customer cus : trainList) {
+    		map.put(cus, getSim(cus, target));
+    	}	
+    	ArrayList<Customer> list = new ArrayList<Customer>(map.keySet());
+    	list.sort(new Comparator<Customer>() {
+
+			@Override
+			public int compare(Customer o1, Customer o2) {
+				return Double.compare(map.get(o2), map.get(o1));
+			}
+    		
+    	});
+    	HashMap<Customer, Double> res = new HashMap<Customer, Double>();
+    	for (int i = 0; i < k; i++) {
+    		Customer cus = list.get(i);
+    		res.put(cus, map.get(cus));
+    	}
+    	return res;
     }
     
     private static double getSim(Customer c1, Customer c2) {
     	double sum = 0;
     	sum += Math.pow((1 - typeSim[c1.getType()][c2.getType()]), 2);
-    	sum += Math.pow(lifeStyleSim[c1.getLifeStyle()][c2.getLifeStyle()], 2);
+    	sum += Math.pow(1 - lifeStyleSim[c1.getLifeStyle()][c2.getLifeStyle()], 2);
     	sum += Math.pow(c1.getVacation() - c2.getVacation(), 2);
     	sum += Math.pow(c1.geteCredit() - c2.geteCredit(), 2);
     	sum += Math.pow(c1.getSalary() - c2.getSalary(), 2);
