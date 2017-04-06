@@ -72,6 +72,18 @@ public class KNN {
     private static double minSalary = 40;
     private static double maxProperty = 0;
     private static double minProperty = 20;
+    
+    private static ArrayList<Customer> trainList = new ArrayList<Customer>();
+    
+    static double[][] typeSim = {{1, 0, 0, 0, 0},
+    		              {0, 1, 0, 0, 0},
+    		              {0, 0, 1, 0, 0},
+    		              {0, 0, 0, 1, 0},
+    		              {0, 0, 0, 0, 1}};
+    static double[][] lifeStyleSim = {{1, 0, 0, 0},
+    		                   {0, 1, 0, 0},
+    		                   {0, 0, 1, 0},
+    		                   {0, 0, 0, 1}};
       
     public static void main(String[] args) throws IOException {
         File trainFile = new File("trainProdSelection.arff");
@@ -97,33 +109,45 @@ public class KNN {
             	minProperty = Math.min(minProperty, property);
             }
         }
-        System.out.println(maxVacation);
-        System.out.println(minVacation);
-        System.out.println(maxeCredit);
-        System.out.println(mineCredit);
-        System.out.println(maxSalary);
-        System.out.println(minSalary);
-        System.out.println(maxProperty);
-        System.out.println(minProperty);
+//        System.out.println(maxVacation);
+//        System.out.println(minVacation);
+//        System.out.println(maxeCredit);
+//        System.out.println(mineCredit);
+//        System.out.println(maxSalary);
+//        System.out.println(minSalary);
+//        System.out.println(maxProperty);
+//        System.out.println(minProperty);
         
         BufferedReader trainIn1 = new BufferedReader(new InputStreamReader(new FileInputStream(trainFile), "UTF-8"));
-        ArrayList<Customer> trainList = new ArrayList<Customer>(); 
         for (String l = trainIn1.readLine(); l != null; l = trainIn1.readLine()) {
             if (!l.startsWith("@") && l.length() > 0) {
                 trainList.add(parseCustomer(l));
             }
         }
         
-        System.out.println(trainList.size());
-        for (Customer customer : trainList) System.out.println(customer.toString());
+//        System.out.println(trainList.size());
+//        for (Customer customer : trainList) System.out.println(customer.toString());
         
-        
+        String testStr = "student,spend<<saving,10,15,12,3";
+        Customer testCus = parseCustomer(testStr);
+        System.out.println(getSim(testCus, trainList.get(0)));
 //        
 //        for (String l = testIn.readLine(); l != null; l = testIn.readLine()) {
 //            if (!l.startsWith("@") && l.length() > 0) {
 //                System.out.println(l);
 //            }
 //        }
+    }
+    
+    private static double getSim(Customer c1, Customer c2) {
+    	double sum = 0;
+    	sum += Math.pow((1 - typeSim[c1.getType()][c2.getType()]), 2);
+    	sum += Math.pow(lifeStyleSim[c1.getLifeStyle()][c2.getLifeStyle()], 2);
+    	sum += Math.pow(c1.getVacation() - c2.getVacation(), 2);
+    	sum += Math.pow(c1.geteCredit() - c2.geteCredit(), 2);
+    	sum += Math.pow(c1.getSalary() - c2.getSalary(), 2);
+    	sum += Math.pow(c1.getProperty() - c2.getProperty(), 2);
+    	return 1 / Math.sqrt(sum);
     }
     
     private static Customer parseCustomer(String s) {
@@ -148,38 +172,40 @@ public class KNN {
     	}
     	switch (str[1]) {
     	case "spend<<saving": 
-    		customer.setType(0);
+    		customer.setLifeStyle(0);
     		break;
     	case "spend<saving": 
-    		customer.setType(1);
+    		customer.setLifeStyle(1);
     		break;
     	case "spend>saving": 
-    		customer.setType(2);
+    		customer.setLifeStyle(2);
     		break;
     	case "spend>>saving": 
-    		customer.setType(3);
+    		customer.setLifeStyle(3);
     		break;
     	}
     	customer.setVacation((Double.parseDouble(str[2]) - minVacation) / (maxVacation - minVacation));
     	customer.seteCredit((Double.parseDouble(str[3]) - mineCredit) / (maxeCredit -mineCredit));
     	customer.setSalary((Double.parseDouble(str[4]) - minSalary) / (maxSalary -minSalary));
-    	customer.setProperty((Double.parseDouble(str[5]) - minProperty) / (maxProperty -minProperty));	
-    	switch (str[6]) {
-    	case "C1": 
-    		customer.setType(1);
-    		break;
-    	case "C2": 
-    		customer.setType(2);
-    		break;
-    	case "C3": 
-    		customer.setType(3);
-    		break;
-    	case "C4": 
-    		customer.setType(4);
-    		break;
-    	case "C5": 
-    		customer.setType(5);
-    		break;
+    	customer.setProperty((Double.parseDouble(str[5]) - minProperty) / (maxProperty -minProperty));
+    	if (str.length == 7) {
+    		switch (str[6]) {
+        	case "C1": 
+        		customer.setProduct(1);
+        		break;
+        	case "C2": 
+        		customer.setProduct(2);
+        		break;
+        	case "C3": 
+        		customer.setProduct(3);
+        		break;
+        	case "C4": 
+        		customer.setProduct(4);
+        		break;
+        	case "C5": 
+        		customer.setProduct(5);
+        		break;
+        	}
     	}
     	return customer;
     }
