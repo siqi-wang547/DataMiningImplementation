@@ -42,21 +42,17 @@ public class CheckAccuracy {
                                       {0, 0, 0, 1}};
 
     //Check the accuracy of the current test bulk
-    public static double checkAccuracy(int start) {
-        double right = 0;
+    public static int checkAccuracy(int start) {
+        int right = 0;
         for (Customer customer : testList) {
-            //System.out.println("Test Customer: " + customer.toString());
-            //System.out.println("Givn Customer: " + allList.get(start).toString());
             Map<Customer, Double> topK = getTopK(customer, 3);
             int curr = getPredict(topK);
-            //System.out.println(curr);
             if (curr == allList.get(start).getProduct()) {
                 right++;
             }
             start++;
         }
-        System.out.println(right + " / " + 31);
-        return right / 31;
+        return right;
     }
     
     //Set the new test and train list
@@ -98,6 +94,7 @@ public class CheckAccuracy {
                 minProperty = Math.min(minProperty, property);
             }
         }
+        
         //Read in original data and store them as customers after initialization done
         BufferedReader trainIn1 = new BufferedReader(new InputStreamReader(new FileInputStream(trainFile), "UTF-8"));
         for (String l = trainIn1.readLine(); l != null; l = trainIn1.readLine()) {
@@ -105,29 +102,18 @@ public class CheckAccuracy {
                 allList.add(parseCustomer(l));
             }
         }
+        //Shuffle the original list
         Collections.shuffle(allList);
-        //Set test and train list
-        setTestAndTrain(0, 31);
-        double currAccuracy1 = checkAccuracy(0);
-        System.out.println(currAccuracy1);
-        setTestAndTrain(31, 62);
-        double currAccuracy2 = checkAccuracy(31);
-        System.out.println(currAccuracy2);
-        setTestAndTrain(62, 93);
-        double currAccuracy3 = checkAccuracy(62);
-        System.out.println(currAccuracy3);
-        setTestAndTrain(93, 124);
-        double currAccuracy4 = checkAccuracy(93);
-        System.out.println(currAccuracy4);
-        setTestAndTrain(124, 155);
-        double currAccuracy5 = checkAccuracy(124);
-        System.out.println(currAccuracy5);
-        setTestAndTrain(155, 186);
-        double currAccuracy6 = checkAccuracy(155);
-        System.out.println(currAccuracy6);
-        System.out.println();
-        System.out.println((currAccuracy1 + currAccuracy2 + currAccuracy3 + currAccuracy4 
-                         + currAccuracy5 + currAccuracy6) / 6);
+        
+        //Calculate the accuracy
+        double total = 0;
+        for (int i = 0; i < 31; i++) {
+            //Set test and train list
+            setTestAndTrain(i * 6, i * 6 + 6);
+            int currAccuracy = checkAccuracy(i * 6);
+            total += currAccuracy;
+        }
+        System.out.println(total / 186);
     }
 
     private static int getPredict(Map<Customer, Double> customers) {
