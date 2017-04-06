@@ -6,6 +6,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
@@ -103,6 +104,7 @@ public class CheckAccuracy {
                 allList.add(parseCustomer(l));
             }
         }
+        Collections.shuffle(allList);
         //Set test and train list
         setTestAndTrain(0, 31);
         double currAccuracy = checkAccuracy(0);
