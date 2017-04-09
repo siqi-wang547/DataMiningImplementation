@@ -12,6 +12,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+
 public class CheckAccuracy {
 
     // given ranges for each part
@@ -40,6 +41,8 @@ public class CheckAccuracy {
                                       {0, 1, 0, 0},
                                       {0, 0, 1, 0},
                                       {0, 0, 0, 1}};
+    
+    static double[] w = {1, 1, 1, 1, 1, 1};
 
     //Check the accuracy of the current test bulk
     public static int checkAccuracy(int start) {
@@ -159,14 +162,14 @@ public class CheckAccuracy {
     }
 
     private static double getSim(Customer c1, Customer c2) {
-        double sum = 0;
-        sum += Math.pow((1 - typeSim[c1.getType()][c2.getType()]), 2);
-        sum += Math.pow(1 - lifeStyleSim[c1.getLifeStyle()][c2.getLifeStyle()], 2);
-        sum += Math.pow(c1.getVacation() - c2.getVacation(), 2);
-        sum += Math.pow(c1.geteCredit() - c2.geteCredit(), 2);
-        sum += Math.pow(c1.getSalary() - c2.getSalary(), 2);
-        sum += Math.pow(c1.getProperty() - c2.getProperty(), 2);
-        return 1 / Math.sqrt(sum);
+    	double sum = 0;
+    	sum += Math.pow(w[0] * (1 - typeSim[c1.getType()][c2.getType()]), 2);
+    	sum += Math.pow(w[1] * (1 - lifeStyleSim[c1.getLifeStyle()][c2.getLifeStyle()]), 2);
+    	sum += Math.pow(w[2] * c1.getVacation() - w[2] * c2.getVacation(), 2);
+    	sum += Math.pow(w[3] * c1.geteCredit() - w[3] * c2.geteCredit(), 2);
+    	sum += Math.pow(w[4] * c1.getSalary() - w[4] * c2.getSalary(), 2);
+    	sum += Math.pow(w[5] * c1.getProperty() - w[5] * c2.getProperty(), 2);
+    	return 1 / Math.sqrt(sum);
     }
 
     private static Customer parseCustomer(String s) {
