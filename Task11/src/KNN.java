@@ -80,14 +80,14 @@ public class KNN {
     private static ArrayList<Customer> trainList = new ArrayList<Customer>();
     
     static double[][] typeSim = {{1, 0, 0, 0, 0},
-    		              {0, 1, 0, 0, 0},
-    		              {0, 0, 1, 0, 0},
-    		              {0, 0, 0, 1, 0},
-    		              {0, 0, 0, 0, 1}};
+    		                     {0, 1, 0, 0, 0},
+    		                     {0, 0, 1, 0, 0},
+    		                     {0, 0, 0, 1, 0},
+    		                     {0, 0, 0, 0, 1}};
     static double[][] lifeStyleSim = {{1, 0, 0, 0},
-    		                   {0, 1, 0, 0},
-    		                   {0, 0, 1, 0},
-    		                   {0, 0, 0, 1}};
+    		                          {0, 1, 0, 0},
+    		                          {0, 0, 1, 0},
+    		                          {0, 0, 0, 1}};
       
     public static void main(String[] args) throws IOException {
         File trainFile = new File("trainProdSelection.arff");
