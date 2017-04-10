@@ -8,7 +8,7 @@ import java.util.Comparator;
 import java.util.HashMap;
 import java.util.Map;
 
-public class KNN {
+public class KNNforSelection {
     static class Customer {
     	private int type;
     	private int lifeStyle;
