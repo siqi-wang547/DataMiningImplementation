@@ -11,7 +11,7 @@ import java.util.Comparator;
 import java.util.HashMap;
 import java.util.Map;
 
-public class CheckAccuracyAndAdjustWeight {
+public class CheckAccuracyAndAdjustWeightforSelection {
 
     // Initialize data
     private static int maxVacation = 0;

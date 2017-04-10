@@ -136,7 +136,7 @@ public class IntroBinary {
                 trainList.add(parseProduct(l));
             }
         }
-        Product test = parseProduct("Fund,Student,0.64,0.95,Small,Full,0,10");
+        Product test = parseProduct("Fund, Student, 0.64, 0.95, Small, Full, 0, 10");
         Map<Product, Double> top5 = getTopK(test, 5);
         for (Product p : top5.keySet()) System.out.println(p.toString() + "\t" + top5.get(p));
         System.out.println(getPredict(top5));
@@ -268,5 +268,4 @@ public class IntroBinary {
     	}
     	return product;
     }
-
 }
