@@ -4,80 +4,14 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.Map;
 
 public class IntroReal {
-	static class Product {
-		private int service_type;
-		private int customer;
-		private double monthly_fee;
-		private double advertisement_budget;
-		private int size;
-		private int promotion;
-		private double interest_rate;
-		private double period;
-		private double label;
-		public String toString() {
-			return "Service Type:" + service_type + "\tCustomer:" + customer + "\tMonthly fee:" + monthly_fee + "\tAdvertisement Budget:" + advertisement_budget + "\tSize:" + size + "\tPromotion:" + promotion + "\tInterest Rate:" + interest_rate + "\tPeriod:" + period + "\tLabel:" + label;
-		}
-		public int getService_type() {
-			return service_type;
-		}
-		public void setService_type(int service_type) {
-			this.service_type = service_type;
-		}
-		public int getCustomer() {
-			return customer;
-		}
-		public void setCustomer(int customer) {
-			this.customer = customer;
-		}
-		public double getMonthly_fee() {
-			return monthly_fee;
-		}
-		public void setMonthly_fee(double monthly_fee) {
-			this.monthly_fee = monthly_fee;
-		}
-		public double getAdvertisement_budget() {
-			return advertisement_budget;
-		}
-		public void setAdvertisement_budget(double advertisement_budget) {
-			this.advertisement_budget = advertisement_budget;
-		}
-		public int getSize() {
-			return size;
-		}
-		public void setSize(int size) {
-			this.size = size;
-		}
-		public int getPromotion() {
-			return promotion;
-		}
-		public void setPromotion(int promotion) {
-			this.promotion = promotion;
-		}
-		public double getInterest_rate() {
-			return interest_rate;
-		}
-		public void setInterest_rate(double interest_rate) {
-			this.interest_rate = interest_rate;
-		}
-		public double getPeriod() {
-			return period;
-		}
-		public void setPeriod(double period) {
-			this.period = period;
-		}
-		public double getLabel() {
-			return label;
-		}
-		public void setLabel(double label) {
-			this.label = label;
-		}
-	}
-	
+
+    //initial data
 	private static double maxMF = 0.5;
     private static double minMF = 20;
     private static double maxAB = 0;
@@ -87,7 +21,9 @@ public class IntroReal {
     private static double maxP = 0;
     private static double minP = 120;
     
-    private static ArrayList<Product> trainList = new ArrayList<Product>();
+    private static ArrayList<Product> allList = new ArrayList<Product>();
+    private static ArrayList<Product> trainList;
+    private static ArrayList<Product> testList;
     
     static double[][] typeSim = {{1, 0, 0.1, 0.3, 0.2},
 						         {0, 1, 0, 0, 0},
@@ -109,38 +45,139 @@ public class IntroReal {
     private static double[] w = {1, 1, 1, 1, 1, 1, 1, 1};
 
 	public static void main(String[] args) throws IOException {
-		File trainFile = new File("trainProdIntro.real.arff");
+	    initialize();
+	    Collections.shuffle(allList);
+//        Product test = parseProduct("Fund,Student,0.64,0.95,Small,Full,0,10");
+//        Map<Product, Double> top5 = getTopK(test, 5);
+//        for (Product p : top5.keySet()) System.out.println(p.toString() + "\t" + top5.get(p));
+//        System.out.println(getPredict(top5));
+        //Set initial data
+        int increase = 0;
+        int decrease = 0;
+        double oldAccuracy = calculateAccuracy();
+        double currAccuracy = calculateAccuracy();
+        
+        while (calculateAccuracy() < 0.9) {
+            for (int i = 0; i < 8; i++) {
+                oldAccuracy = calculateAccuracy();
+                currAccuracy = calculateAccuracy();
+                double oldW = w[i];
+                while (calculateAccuracy() <= currAccuracy && increase < 10) {
+                    currAccuracy = calculateAccuracy();
+                    w[i] *= 2;
+                    increase++;
+//                    System.out.println("w" + i + ": " + w[i]);
+//                    System.out.println(calculateAccuracy());
+                }
+                if (calculateAccuracy() > oldAccuracy) {
+                    increase = 0;
+                    decrease = 0;
+                    continue;
+                } else {
+                    w[i] = oldW;
+                    while (calculateAccuracy() <= currAccuracy && decrease < 10) {
+                        w[i] /= 2;
+                        decrease++;
+//                        System.out.println("w" + i + ": " + w[i]);
+//                        System.out.println(calculateAccuracy());
+                    }
+                    if (calculateAccuracy() > oldAccuracy) {
+                        increase = 0;
+                        decrease = 0;
+                    } else {
+                        increase = 0;
+                        decrease = 0;
+                        w[i] = oldW;
+                    }
+                }
+            }
+        }
+        System.out.println(w[0] + ", " + w[1] + ", " + w[2] + ", " + w[3]
+                  + ", " + w[4] + ", " + w[5] + ", " + w[6] + ", " + w[7]);
+        System.out.println(calculateAccuracy());
+	}
+	
+	private static void initialize() throws IOException {
+	    File trainFile = new File("trainProdIntro.real.arff");
         BufferedReader trainIn = new BufferedReader(new InputStreamReader(new FileInputStream(trainFile), "UTF-8"));
         
         for (String l = trainIn.readLine(); l != null; l = trainIn.readLine()) {
             if (!l.startsWith("@") && l.length() > 0) {
-            	String[] str = l.split(",");
-            	double mf = Double.parseDouble(str[2]);
-            	double ab = Double.parseDouble(str[3]);
-            	double ir = Double.parseDouble(str[6]);
-            	double period = Double.parseDouble(str[7]);
-            	maxMF = Math.max(maxMF, mf);
-            	minMF = Math.min(minMF, mf);
-            	maxAB = Math.max(maxAB, ab);
-            	minAB = Math.min(minAB, ab);
-            	maxIR = Math.max(maxIR, ir);
-            	minIR = Math.min(minIR, ir);
-            	maxP = Math.max(maxP, period);
-            	minP = Math.min(minP, period);
+                String[] str = l.split(",");
+                double mf = Double.parseDouble(str[2]);
+                double ab = Double.parseDouble(str[3]);
+                double ir = Double.parseDouble(str[6]);
+                double period = Double.parseDouble(str[7]);
+                maxMF = Math.max(maxMF, mf);
+                minMF = Math.min(minMF, mf);
+                maxAB = Math.max(maxAB, ab);
+                minAB = Math.min(minAB, ab);
+                maxIR = Math.max(maxIR, ir);
+                minIR = Math.min(minIR, ir);
+                maxP = Math.max(maxP, period);
+                minP = Math.min(minP, period);
             }
         }
         
         BufferedReader trainIn1 = new BufferedReader(new InputStreamReader(new FileInputStream(trainFile), "UTF-8"));
         for (String l = trainIn1.readLine(); l != null; l = trainIn1.readLine()) {
             if (!l.startsWith("@") && l.length() > 0) {
-                trainList.add(parseProduct(l));
+                allList.add(parseProduct(l));
             }
         }
-        Product test = parseProduct("Fund,Student,0.64,0.95,Small,Full,0,10");
-        Map<Product, Double> top5 = getTopK(test, 5);
-        for (Product p : top5.keySet()) System.out.println(p.toString() + "\t" + top5.get(p));
-        System.out.println(getPredict(top5));
 	}
+	
+    /**
+     * Set the new test and train lists
+     * @param start
+     * @param end
+     */
+    public static void setTestAndTrain(int start, int end) {
+        trainList = new ArrayList<Product>();
+        testList = new ArrayList<Product>();
+        for (int i = 0; i < start; i++) {
+            trainList.add(allList.get(i));
+        }
+        for (int i = start; i < end; i++) {
+            testList.add(allList.get(i));
+        }
+        for (int i = end; i < allList.size(); i++) {
+            trainList.add(allList.get(i));
+        }
+    }
+    
+    /**
+     * Check the accuracy of the current test bulk
+     * @param start
+     * @return
+     */
+    public static int checkAccuracy(int start) {
+        int right = 0;
+        for (Product product : testList) {
+            Map<Product, Double> topK = getTopK(product, 5);
+            double curr = getPredict(topK);
+            if (Math.abs(curr - allList.get(start).getLabel()) / allList.get(start).getLabel() < 0.275) {
+                right++;
+            }
+            start++;
+        }
+        return right;
+    }
+
+    /**
+     * Calculate the accuracy for all data
+     * @return
+     */
+    public static double calculateAccuracy() {
+        double total = 0;
+        for (int i = 0; i < 16; i++) {
+            //Set test and train list
+            setTestAndTrain(i * 10, i * 10 + 10);
+            int currAccuracy = checkAccuracy(i * 10);
+            total += currAccuracy;
+        }
+        return total / 160;
+    }
 	
 	private static double getPredict(Map<Product, Double> products) {
 		double total = 0;
@@ -257,4 +294,75 @@ public class IntroReal {
     	return product;
     }
 
+	/**
+	 * inner class for Product.
+	 */
+	static class Product {
+        private int service_type;
+        private int customer;
+        private double monthly_fee;
+        private double advertisement_budget;
+        private int size;
+        private int promotion;
+        private double interest_rate;
+        private double period;
+        private double label;
+        public String toString() {
+            return "Service Type:" + service_type + "\tCustomer:" + customer + "\tMonthly fee:" + monthly_fee + "\tAdvertisement Budget:" + advertisement_budget + "\tSize:" + size + "\tPromotion:" + promotion + "\tInterest Rate:" + interest_rate + "\tPeriod:" + period + "\tLabel:" + label;
+        }
+        public int getService_type() {
+            return service_type;
+        }
+        public void setService_type(int service_type) {
+            this.service_type = service_type;
+        }
+        public int getCustomer() {
+            return customer;
+        }
+        public void setCustomer(int customer) {
+            this.customer = customer;
+        }
+        public double getMonthly_fee() {
+            return monthly_fee;
+        }
+        public void setMonthly_fee(double monthly_fee) {
+            this.monthly_fee = monthly_fee;
+        }
+        public double getAdvertisement_budget() {
+            return advertisement_budget;
+        }
+        public void setAdvertisement_budget(double advertisement_budget) {
+            this.advertisement_budget = advertisement_budget;
+        }
+        public int getSize() {
+            return size;
+        }
+        public void setSize(int size) {
+            this.size = size;
+        }
+        public int getPromotion() {
+            return promotion;
+        }
+        public void setPromotion(int promotion) {
+            this.promotion = promotion;
+        }
+        public double getInterest_rate() {
+            return interest_rate;
+        }
+        public void setInterest_rate(double interest_rate) {
+            this.interest_rate = interest_rate;
+        }
+        public double getPeriod() {
+            return period;
+        }
+        public void setPeriod(double period) {
+            this.period = period;
+        }
+        public double getLabel() {
+            return label;
+        }
+        public void setLabel(double label) {
+            this.label = label;
+        }
+    }
 }

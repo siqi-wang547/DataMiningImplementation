@@ -9,7 +9,7 @@ import java.util.Comparator;
 import java.util.HashMap;
 import java.util.Map;
 
-public class CheckAccuracyAndAdjustWeightforIntroBinary {
+public class CheckAccuracyforIntroBinary {
 
     //Initialize data
     private static double maxMF = 0.5;
