@@ -176,8 +176,30 @@ public class CheckAccuracyAndAdjustWeightforSelection {
         }
         System.out.println(w[0] + ", " + w[1] + ", " + w[2] + ", " + w[3] + ", " + w[4] + ", " +w[5]);
         System.out.println(calculateAccuracy());
+        runTest();
     }
-
+    /**
+     * Print the results for the test data
+     * @throws IOException
+     */
+    private static void runTest() throws IOException {
+    	File testFile = new File("testProdSelection.arff");
+        BufferedReader testIn = new BufferedReader(new InputStreamReader(new FileInputStream(testFile), "UTF-8"));
+        
+        for (String l = testIn.readLine(); l != null; l = testIn.readLine()) {
+        	if (!l.startsWith("@") && l.length() > 0) {
+        		Customer cus = parseCustomer(l);
+        		Map<Customer, Double> topK = getTopK(cus, 3);
+        		cus.setProduct(getPredict(topK));
+        		System.out.println(cus.toString());
+        	}
+        }
+    }
+    /**
+     * Predict the class label given the top k similar customer.
+     * @param customers the top k similar customer
+     * @return the predicted class label
+     */
     private static int getPredict(Map<Customer, Double> customers) {
         HashMap<Integer, Double> map = new HashMap<Integer, Double>();
         for (Customer cus : customers.keySet()) {
@@ -197,7 +219,12 @@ public class CheckAccuracyAndAdjustWeightforSelection {
         });
         return list.get(0);
     }
-
+    /**
+     * Get top k similar customers given the target customer
+     * @param target the target customer
+     * @param k number of top similar customers
+     * @return a map of top k customer with similarity scores
+     */
     private static Map<Customer, Double> getTopK(Customer target, int k) {
         HashMap<Customer, Double> map = new HashMap<Customer, Double>();
         for (Customer cus : trainList) {
@@ -219,7 +246,12 @@ public class CheckAccuracyAndAdjustWeightforSelection {
         }
         return res;
     }
-
+    /**
+     * Get the similarity score of two customers.
+     * @param c1 the first customer
+     * @param c2 the second customer
+     * @return the similarity score
+     */
     private static double getSim(Customer c1, Customer c2) {
     	double sum = 0;
     	sum += Math.pow(w[0] * (1 - typeSim[c1.getType()][c2.getType()]), 2);
@@ -230,7 +262,11 @@ public class CheckAccuracyAndAdjustWeightforSelection {
     	sum += Math.pow(w[5] * c1.getProperty() - w[5] * c2.getProperty(), 2);
     	return 1 / Math.sqrt(sum);
     }
-
+    /**
+     * Parse the a customer from a representative string.
+     * @param s the representative string
+     * @return the result customer class
+     */
     private static Customer parseCustomer(String s) {
         Customer customer = new Customer();
         String[] str = s.split(",");
