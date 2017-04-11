@@ -16,12 +16,12 @@ def loadData(filepath):
 
 # calculate Entropy
 # Shannon Entroy defined as the expectation of information of all categories
-def cal_entropy(dataSet):
-    num = len(dataSet) # size of dataset
+def cal_entropy(dataset):
+    num = len(dataset) # size of dataset
     label_dic = {}
-    for data in dataSet: # count occurrence of each label
+    for data in dataset: # count occurrence of each label
         label = data[-1]
-        if label in label_dic.keys():
+        if label in label_dic:
             label_dic[label] += 1
         else: label_dic[label] = 1
     entropy = 0.0
@@ -32,43 +32,52 @@ def cal_entropy(dataSet):
 
 
 # split the dataset
-def splitDiscrete(dataSet, idx, value):
+def split_discrete(dataset, idx, value):
     # three parameters: dataset to split, feature to split on, target value of feature
-    subDataSet = [vec[:idx]+vec[idx+1:] for vec in dataSet if vec[idx] == value]
+    subDataSet = [vec[:idx] + vec[idx+1:] for vec in dataset if vec[idx] == value]
     return subDataSet
 
 
-def splitContinuous(dataSet, idx, value):
-    subDataSet1 = [vec[:idx]+vec[idx+1:] for vec in dataSet if vec[idx] < value]
-    subDataSet2 = [vec[:idx]+vec[idx+1:] for vec in dataSet if vec[idx] >= value]
+def split_continuous(dataset, idx, value):
+    # for a continuous feature, we only do binary split by a given target value
+    subDataSet1 = [vec[:idx] + vec[idx+1:] for vec in dataset if vec[idx] < value]
+    subDataSet2 = [vec[:idx] + vec[idx+1:] for vec in dataset if vec[idx] >= value]
     return subDataSet1, subDataSet2
 
+
 # find the best feature to split the dataset
-def optimal_split_feat(dataSet, is_continuous):
-    feature_num = len(dataSet[0]) - 1 # number of features
-    base_entropy = cal_entropy(dataSet) # initial entropy
+def optimal_split_feat(dataset, is_continuous):
+    feature_num = len(dataset[0]) - 1 # number of features
+    # print feature_num
+    base_entropy = cal_entropy(dataset) # initial entropy
     best_feature_idx = -1
-    best_split_point = 0
-    for i in range (feature_num):  # iterate on each column(feature)
-        feature = [data[i] for data in dataSet]
+    best_split_point = 0.0
+    max_info_gain = 0.0
+    for i in range (feature_num):  # iterate through columns(feature)
+        feature = [data[i] for data in dataset]
         new_entropy = 0.0
         if not is_continuous[i]:
-            for value in set(feature):  # get all possible values of each column
-                subDataSet = splitDiscrete(dataSet, i, value) # for each target value, get its occurrence
-                prob = len(subDataSet) / float(len(dataSet))
+            for value in set(feature):  # get all possible values of this column
+                subDataSet = split_discrete(dataset, i, value) # for each target value, get its occurrence
+                prob = len(subDataSet) / float(len(dataset))
                 new_entropy += prob * cal_entropy(subDataSet) # cal the entropy
-            if new_entropy < base_entropy:  # return ith column when entropy reaches minimum
-                base_entropy = new_entropy
+            # if new_entropy < base_entropy:  # return ith column when entropy reaches minimum
+            #     base_entropy = new_entropy
+            #     best_feature_idx = i
+            info_gain = new_entropy - base_entropy
+            if info_gain > max_info_gain:
+                max_info_gain = info_gain
                 best_feature_idx = i
         else:
-            sortedFeature = sorted(set(feature))
-            for value in sortedFeature:
-                subDataSet1, subDataSet2 = splitContinuous(dataSet, i, value)
-                new_entropy += len(subDataSet1) / float(len(dataSet)) * cal_entropy(subDataSet1)
-                new_entropy += len(subDataSet2) / float(len(dataSet)) * cal_entropy(subDataSet2)
+            sortedFeature = sorted(set(feature))  # sort all possible value in the given column
+            for value in sortedFeature:  # from small to big, choose as split target value one by one
+                subDataSet1, subDataSet2 = split_continuous(dataset, i, value)  # two subset after split
+                new_entropy += len(subDataSet1) / float(len(dataset)) * cal_entropy(subDataSet1)
+                new_entropy += len(subDataSet2) / float(len(dataset)) * cal_entropy(subDataSet2)
                 # modification from c45 could be applied IG - log2(N-1)/|D|, N = len(sortedFeature, D = len(dataSet)
-                if new_entropy < base_entropy:  # return ith column when entropy reaches minimum
-                    base_entropy = new_entropy
+                info_gain = new_entropy - base_entropy
+                if info_gain > max_info_gain:
+                    max_info_gain = info_gain
                     best_feature_idx = i
                     best_split_point = value
     return best_feature_idx, best_split_point
@@ -92,6 +101,7 @@ def createTree(dataSet, attributes, is_continuous):
     if len(dataSet[0]) == 1:
         return majorityCnt(labels) # after traversing all features, return the majority label
     bestIdx, bestSplitPoint = optimal_split_feat(dataSet, is_continuous)
+    print bestIdx
     bestAttr = attributes[bestIdx]
     # print bestIdx, bestAttr
     myTree = {bestAttr: {}}
@@ -102,16 +112,16 @@ def createTree(dataSet, attributes, is_continuous):
         for value in set(featureValues):  # recursively create the tree
             subAttrs = attributes[:]
             subContinuous = is_continuous[:]
-            myTree[bestAttr][value] = createTree(splitDiscrete(dataSet, bestIdx, value), subAttrs, subContinuous)
+            myTree[bestAttr][value] = createTree(split_discrete(dataSet, bestIdx, value), subAttrs, subContinuous)
     else:
-        # print "enter\n"
+        print "enter\n"
         featureValues = ['< ' + str(bestSplitPoint), '>= ' + str(bestSplitPoint)]
         del (is_continuous[bestIdx])
         for i in range(2): # recursively create the tree
             value = featureValues[i]
             subAttrs = attributes[:]
             subContinuous = is_continuous[:]
-            myTree[bestAttr][value] = createTree(splitContinuous(dataSet, bestIdx, value)[i], subAttrs, subContinuous)
+            myTree[bestAttr][value] = createTree(split_continuous(dataSet, bestIdx, value)[i], subAttrs, subContinuous)
         # sample tree structure {'feature1': {value1: label1, value2: {'feature2': {value1: label2, value2: label3}}}}
     return myTree
 
