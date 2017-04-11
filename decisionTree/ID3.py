@@ -1,6 +1,7 @@
 # !/usr/bin/python
 from math import log
 import operator
+import random
 import json
 
 
@@ -12,6 +13,9 @@ def loadData(filepath):
             cur = [float(line[i]) if is_continuous[i] else line[i] for i in range(len(line))]
             matrix.append(cur)
     return matrix
+    # random.shuffle(matrix)
+    # len = len(matrix) * 9 / 10
+    # return matrix[:len], matrix[len+1:]
 
 
 # calculate Entropy
@@ -29,6 +33,13 @@ def cal_entropy(dataset):
         prob = float(label_dic[key]) / num # calculate probability
         entropy -= prob * log(prob, 2) # Entropy
     return entropy
+
+
+# calculate information gain rate c45
+def calculate_ig_rate(base_ent, new_ent):
+    info_gain = base_ent - new_ent
+    rate = info_gain / base_ent
+    return rate
 
 
 # split the dataset
@@ -55,8 +66,9 @@ def optimal_split_feat(dataset, is_continuous):
     max_info_gain = 0.0
     for i in range (feature_num):  # iterate through columns(feature)
         feature = [data[i] for data in dataset]
-        new_entropy = 0.0
+
         if not is_continuous[i]:
+            new_entropy = 0.0
             for value in set(feature):  # get all possible values of this column
                 subDataSet = split_discrete(dataset, i, value) # for each target value, get its occurrence
                 prob = len(subDataSet) / float(len(dataset))
@@ -64,18 +76,19 @@ def optimal_split_feat(dataset, is_continuous):
             # if new_entropy < base_entropy:  # return ith column when entropy reaches minimum
             #     base_entropy = new_entropy
             #     best_feature_idx = i
-            info_gain = new_entropy - base_entropy
+            info_gain = base_entropy - new_entropy
             if info_gain > max_info_gain:
                 max_info_gain = info_gain
                 best_feature_idx = i
         else:
             sortedFeature = sorted(set(feature))  # sort all possible value in the given column
             for value in sortedFeature:  # from small to big, choose as split target value one by one
+                new_entropy = 0.0
                 subDataSet1, subDataSet2 = split_continuous(dataset, i, value)  # two subset after split
                 new_entropy += len(subDataSet1) / float(len(dataset)) * cal_entropy(subDataSet1)
                 new_entropy += len(subDataSet2) / float(len(dataset)) * cal_entropy(subDataSet2)
                 # modification from c45 could be applied IG - log2(N-1)/|D|, N = len(sortedFeature, D = len(dataSet)
-                info_gain = new_entropy - base_entropy
+                info_gain = base_entropy - new_entropy
                 if info_gain > max_info_gain:
                     max_info_gain = info_gain
                     best_feature_idx = i
@@ -96,7 +109,7 @@ def majorityCnt(labels):
 def createTree(dataSet, attributes, is_continuous):
     labels = [data[-1] for data in dataSet]  # labels in dataset
     # print len(labels)
-    if labels.count(labels[0]) == len(labels):
+    if len(set(labels)) == 1:
         return labels[0] # only one label, return
     if len(dataSet[0]) == 1:
         return majorityCnt(labels) # after traversing all features, return the majority label
@@ -114,7 +127,7 @@ def createTree(dataSet, attributes, is_continuous):
             subContinuous = is_continuous[:]
             myTree[bestAttr][value] = createTree(split_discrete(dataSet, bestIdx, value), subAttrs, subContinuous)
     else:
-        print "enter\n"
+        print "enter"
         featureValues = ['< ' + str(bestSplitPoint), '>= ' + str(bestSplitPoint)]
         del (is_continuous[bestIdx])
         for i in range(2): # recursively create the tree
@@ -129,6 +142,6 @@ attributes = ['Type', 'LifeStyle', 'Vacation', 'eCredit', 'salary', 'property', 
 is_continuous = [False, False, True, True, True, True, False]
 #filepath = 'train5lines'
 filepath = 'trainProdSelection'
-data = loadData(filepath)
-tree = createTree(data, attributes, is_continuous)
+train = loadData(filepath)
+tree = createTree(train, attributes, is_continuous)
 print json.dumps(tree)
