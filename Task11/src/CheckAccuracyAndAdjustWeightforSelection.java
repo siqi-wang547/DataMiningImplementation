@@ -9,12 +9,11 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
-public class CheckAccuracy {
+public class CheckAccuracyAndAdjustWeightforSelection {
 
-    // given ranges for each part
+    // Initialize data
     private static int maxVacation = 0;
     private static int minVacation = 60;
     private static int maxeCredit = 5;
@@ -23,57 +22,25 @@ public class CheckAccuracy {
     private static double minSalary = 40;
     private static double maxProperty = 0;
     private static double minProperty = 20;
-
     private static ArrayList<Customer> allList = new ArrayList<Customer>();
-    
     private static ArrayList<Customer> trainList;
-    
     private static ArrayList<Customer> testList;
-
-    static double[][] typeSim = {{1, 0, 0, 0, 0},
+    private static double[][] typeSim = {{1, 0, 0, 0, 0},
                                  {0, 1, 0, 0, 0},
                                  {0, 0, 1, 0, 0},
                                  {0, 0, 0, 1, 0},
                                  {0, 0, 0, 0, 1}};
-
-    static double[][] lifeStyleSim = {{1, 0, 0, 0},
+    private static double[][] lifeStyleSim = {{1, 0, 0, 0},
                                       {0, 1, 0, 0},
                                       {0, 0, 1, 0},
                                       {0, 0, 0, 1}};
+    private static double[] w = {1, 1, 1, 1, 1, 1};
 
-    //Check the accuracy of the current test bulk
-    public static int checkAccuracy(int start) {
-        int right = 0;
-        for (Customer customer : testList) {
-            Map<Customer, Double> topK = getTopK(customer, 3);
-            int curr = getPredict(topK);
-            if (curr == allList.get(start).getProduct()) {
-                right++;
-            }
-            start++;
-        }
-        return right;
-    }
-    
-    //Set the new test and train list
-    public static void setTestAndTrain(int start, int end) {
-        trainList = new ArrayList<Customer>();
-        testList = new ArrayList<Customer>();
-        //System.out.println("0, " + start);
-        for (int i = 0; i < start; i++) {
-            trainList.add(allList.get(i));
-        }
-        //System.out.println(start + ", " + end);
-        for (int i = start; i < end; i++) {
-            testList.add(allList.get(i));
-        }
-        //System.out.println(end + ", " + allList.size());
-        for (int i = end; i < allList.size(); i++) {
-            trainList.add(allList.get(i));
-        }
-    }
-
-    public static void main(String[] args) throws IOException {
+    /**
+     * load data
+     * @throws IOException
+     */
+    public static void initialize() throws IOException {
         //Go over the train list and set the max and min value for each part
         File trainFile = new File("trainProdSelection.arff");
         BufferedReader trainIn = new BufferedReader(new InputStreamReader(new FileInputStream(trainFile), "UTF-8"));
@@ -102,9 +69,53 @@ public class CheckAccuracy {
                 allList.add(parseCustomer(l));
             }
         }
-        //Shuffle the original list
-        Collections.shuffle(allList);
-        
+    }
+    
+    /**
+     * Check the accuracy of the current test bulk
+     * @param start
+     * @return
+     */
+    public static int checkAccuracy(int start) {
+        int right = 0;
+        for (Customer customer : testList) {
+            Map<Customer, Double> topK = getTopK(customer, 3);
+            int curr = getPredict(topK);
+            if (curr == allList.get(start).getProduct()) {
+                right++;
+            }
+            start++;
+        }
+        return right;
+    }
+    
+    /**
+     * Set the new test and train lists
+     * @param start
+     * @param end
+     */
+    public static void setTestAndTrain(int start, int end) {
+        trainList = new ArrayList<Customer>();
+        testList = new ArrayList<Customer>();
+        //System.out.println("0, " + start);
+        for (int i = 0; i < start; i++) {
+            trainList.add(allList.get(i));
+        }
+        //System.out.println(start + ", " + end);
+        for (int i = start; i < end; i++) {
+            testList.add(allList.get(i));
+        }
+        //System.out.println(end + ", " + allList.size());
+        for (int i = end; i < allList.size(); i++) {
+            trainList.add(allList.get(i));
+        }
+    }
+
+    /**
+     * Calculate the accuracy for all data
+     * @return
+     */
+    public static double calculateAccuracy() {
         //Calculate the accuracy
         double total = 0;
         for (int i = 0; i < 31; i++) {
@@ -113,9 +124,82 @@ public class CheckAccuracy {
             int currAccuracy = checkAccuracy(i * 6);
             total += currAccuracy;
         }
-        System.out.println(total / 186);
+        return total / 186;
     }
 
+    public static void main(String[] args) throws IOException {
+        
+        //Initialize the data
+        initialize();
+        //Shuffle the original list
+        Collections.shuffle(allList);
+        //Set initial data
+        int increase = 0;
+        int decrease = 0;
+        double oldAccuracy = calculateAccuracy();
+        double currAccuracy = calculateAccuracy();
+        
+        while (calculateAccuracy() < 0.9) {
+            for (int i = 0; i < 6; i++) {
+                oldAccuracy = calculateAccuracy();
+                currAccuracy = calculateAccuracy();
+                double oldW = w[i];
+                while (calculateAccuracy() <= currAccuracy && increase < 10) {
+                    currAccuracy = calculateAccuracy();
+                    w[i] *= 2;
+                    increase++;
+//                    System.out.println("w" + i + ": " + w[i]);
+//                    System.out.println(calculateAccuracy());
+                }
+                if (calculateAccuracy() > oldAccuracy) {
+                    increase = 0;
+                    decrease = 0;
+                    continue;
+                } else {
+                    w[i] = oldW;
+                    while (calculateAccuracy() <= currAccuracy && decrease < 10) {
+                        w[i] /= 2;
+                        decrease++;
+//                        System.out.println("w" + i + ": " + w[i]);
+//                        System.out.println(calculateAccuracy());
+                    }
+                    if (calculateAccuracy() > oldAccuracy) {
+                        increase = 0;
+                        decrease = 0;
+                    } else {
+                        increase = 0;
+                        decrease = 0;
+                        w[i] = oldW;
+                    }
+                }
+            }
+        }
+        System.out.println(w[0] + ", " + w[1] + ", " + w[2] + ", " + w[3] + ", " + w[4] + ", " +w[5]);
+        System.out.println(calculateAccuracy());
+        runTest();
+    }
+    /**
+     * Print the results for the test data
+     * @throws IOException
+     */
+    private static void runTest() throws IOException {
+    	File testFile = new File("testProdSelection.arff");
+        BufferedReader testIn = new BufferedReader(new InputStreamReader(new FileInputStream(testFile), "UTF-8"));
+        
+        for (String l = testIn.readLine(); l != null; l = testIn.readLine()) {
+        	if (!l.startsWith("@") && l.length() > 0) {
+        		Customer cus = parseCustomer(l);
+        		Map<Customer, Double> topK = getTopK(cus, 3);
+        		cus.setProduct(getPredict(topK));
+        		System.out.println(cus.toString());
+        	}
+        }
+    }
+    /**
+     * Predict the class label given the top k similar customer.
+     * @param customers the top k similar customer
+     * @return the predicted class label
+     */
     private static int getPredict(Map<Customer, Double> customers) {
         HashMap<Integer, Double> map = new HashMap<Integer, Double>();
         for (Customer cus : customers.keySet()) {
@@ -135,7 +219,12 @@ public class CheckAccuracy {
         });
         return list.get(0);
     }
-
+    /**
+     * Get top k similar customers given the target customer
+     * @param target the target customer
+     * @param k number of top similar customers
+     * @return a map of top k customer with similarity scores
+     */
     private static Map<Customer, Double> getTopK(Customer target, int k) {
         HashMap<Customer, Double> map = new HashMap<Customer, Double>();
         for (Customer cus : trainList) {
@@ -157,18 +246,27 @@ public class CheckAccuracy {
         }
         return res;
     }
-
+    /**
+     * Get the similarity score of two customers.
+     * @param c1 the first customer
+     * @param c2 the second customer
+     * @return the similarity score
+     */
     private static double getSim(Customer c1, Customer c2) {
-        double sum = 0;
-        sum += Math.pow((1 - typeSim[c1.getType()][c2.getType()]), 2);
-        sum += Math.pow(1 - lifeStyleSim[c1.getLifeStyle()][c2.getLifeStyle()], 2);
-        sum += Math.pow(c1.getVacation() - c2.getVacation(), 2);
-        sum += Math.pow(c1.geteCredit() - c2.geteCredit(), 2);
-        sum += Math.pow(c1.getSalary() - c2.getSalary(), 2);
-        sum += Math.pow(c1.getProperty() - c2.getProperty(), 2);
-        return 1 / Math.sqrt(sum);
+    	double sum = 0;
+    	sum += Math.pow(w[0] * (1 - typeSim[c1.getType()][c2.getType()]), 2);
+    	sum += Math.pow(w[1] * (1 - lifeStyleSim[c1.getLifeStyle()][c2.getLifeStyle()]), 2);
+    	sum += Math.pow(w[2] * c1.getVacation() - w[2] * c2.getVacation(), 2);
+    	sum += Math.pow(w[3] * c1.geteCredit() - w[3] * c2.geteCredit(), 2);
+    	sum += Math.pow(w[4] * c1.getSalary() - w[4] * c2.getSalary(), 2);
+    	sum += Math.pow(w[5] * c1.getProperty() - w[5] * c2.getProperty(), 2);
+    	return 1 / Math.sqrt(sum);
     }
-
+    /**
+     * Parse the a customer from a representative string.
+     * @param s the representative string
+     * @return the result customer class
+     */
     private static Customer parseCustomer(String s) {
         Customer customer = new Customer();
         String[] str = s.split(",");
@@ -285,6 +383,17 @@ public class CheckAccuracy {
         }
         public String toString() {
             return "type:" + type + ",lifestyle:" + lifeStyle + ",vacation:" + vacation + ",eCredit:" + eCredit + ",Salary:" + salary + "Property:" + property + ",Product:" + product;
+        }
+        public void setW(double a, double b, double c, double d, double e, double f) {
+            w[0] = a;
+            w[1] = b;
+            w[2] = c;
+            w[3] = d;
+            w[4] = e;
+            w[5] = f;
+        }
+        public double[] getW() {
+            return w;
         }
     }
 }
