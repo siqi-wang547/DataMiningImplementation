@@ -9,6 +9,7 @@ import java.util.Comparator;
 import java.util.HashMap;
 import java.util.Map;
 
+
 public class IntroReal {
 
     //initial data
@@ -95,6 +96,7 @@ public class IntroReal {
         System.out.println(w[0] + ", " + w[1] + ", " + w[2] + ", " + w[3]
                   + ", " + w[4] + ", " + w[5] + ", " + w[6] + ", " + w[7]);
         System.out.println(calculateAccuracy());
+        runTest();
 	}
 	
 	private static void initialize() throws IOException {
@@ -126,6 +128,23 @@ public class IntroReal {
             }
         }
 	}
+	/**
+     * Print the results for the test data
+     * @throws IOException
+     */
+    private static void runTest() throws IOException {
+    	File testFile = new File("testProdIntro.real.arff");
+        BufferedReader testIn = new BufferedReader(new InputStreamReader(new FileInputStream(testFile), "UTF-8"));
+        
+        for (String l = testIn.readLine(); l != null; l = testIn.readLine()) {
+        	if (!l.startsWith("@") && l.length() > 0) {
+        		Product pdt = parseProduct(l);
+        		Map<Product, Double> topK = getTopK(pdt, 5);
+        		pdt.setLabel(getPredict(topK));
+        		System.out.println(pdt.toString());
+        	}
+        }
+    }
 	
     /**
      * Set the new test and train lists
