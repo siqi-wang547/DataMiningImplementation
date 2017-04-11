@@ -12,10 +12,10 @@ def loadData(filepath):
             line = line.strip().split(',')
             cur = [float(line[i]) if is_continuous[i] else line[i] for i in range(len(line))]
             matrix.append(cur)
-    return matrix
-    # random.shuffle(matrix)
-    # len = len(matrix) * 9 / 10
-    # return matrix[:len], matrix[len+1:]
+    #return matrix
+    random.shuffle(matrix)
+    len = len(matrix) * 9 / 10
+    return matrix[:len], matrix[len+1:]
 
 
 # calculate Entropy
@@ -111,6 +111,8 @@ def majorityCnt(labels):
 def createTree(dataSet, attributes, is_continuous):
     labels = [data[-1] for data in dataSet]  # labels in dataset
     # print len(labels)
+    # if len(dataSet) == 0:
+    #     return ''
     if len(set(labels)) == 1:
         return labels[0] # only one label, return
     if len(dataSet[0]) == 1:
@@ -131,19 +133,29 @@ def createTree(dataSet, attributes, is_continuous):
     else:
         print "enter"
         featureValues = ['< ' + str(bestSplitPoint), '>= ' + str(bestSplitPoint)]
+        subsets = split_continuous(dataSet, bestIdx, bestSplitPoint)
         del (is_continuous[bestIdx])
         for i in range(2): # recursively create the tree
             value = featureValues[i]
             subAttrs = attributes[:]
             subContinuous = is_continuous[:]
-            myTree[bestAttr][value] = createTree(split_continuous(dataSet, bestIdx, value)[i], subAttrs, subContinuous)
-        # sample tree structure {'feature1': {value1: label1, value2: {'feature2': {value1: label2, value2: label3}}}}
+            myTree[bestAttr][value] = createTree(subsets[i], subAttrs, subContinuous)
+        # sample tree structure {'Type': {student: c1, doctor: {'lifes': {>: c2, >>: c3}}}}
     return myTree
+
+
+def calculate_test_accuracy(test, tree):
+
+
+
+    return cnt / len(test)
 
 attributes = ['Type', 'LifeStyle', 'Vacation', 'eCredit', 'salary', 'property', 'class']
 is_continuous = [False, False, True, True, True, True, False]
 #filepath = 'train5lines'
 filepath = 'trainProdSelection'
-train = loadData(filepath)
+train, test = loadData(filepath)
 tree = createTree(train, attributes, is_continuous)
+
 print json.dumps(tree)
+
