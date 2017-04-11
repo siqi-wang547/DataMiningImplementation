@@ -63,7 +63,7 @@ def optimal_split_feat(dataset, is_continuous):
     base_entropy = cal_entropy(dataset) # initial entropy
     best_feature_idx = -1
     best_split_point = 0.0
-    max_info_gain = 0.0
+    max_ig_rate = 0.0
     for i in range (feature_num):  # iterate through columns(feature)
         feature = [data[i] for data in dataset]
 
@@ -76,9 +76,10 @@ def optimal_split_feat(dataset, is_continuous):
             # if new_entropy < base_entropy:  # return ith column when entropy reaches minimum
             #     base_entropy = new_entropy
             #     best_feature_idx = i
-            info_gain = base_entropy - new_entropy
-            if info_gain > max_info_gain:
-                max_info_gain = info_gain
+            # info_gain = base_entropy - new_entropy
+            ig_rate = calculate_ig_rate(base_entropy, new_entropy)
+            if ig_rate > max_ig_rate:
+                max_ig_rate = ig_rate
                 best_feature_idx = i
         else:
             sortedFeature = sorted(set(feature))  # sort all possible value in the given column
@@ -88,9 +89,9 @@ def optimal_split_feat(dataset, is_continuous):
                 new_entropy += len(subDataSet1) / float(len(dataset)) * cal_entropy(subDataSet1)
                 new_entropy += len(subDataSet2) / float(len(dataset)) * cal_entropy(subDataSet2)
                 # modification from c45 could be applied IG - log2(N-1)/|D|, N = len(sortedFeature, D = len(dataSet)
-                info_gain = base_entropy - new_entropy
-                if info_gain > max_info_gain:
-                    max_info_gain = info_gain
+                ig_rate = calculate_ig_rate(base_entropy, new_entropy)
+                if ig_rate > max_ig_rate:
+                    max_ig_rate = ig_rate
                     best_feature_idx = i
                     best_split_point = value
     return best_feature_idx, best_split_point
