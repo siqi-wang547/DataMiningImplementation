@@ -58,9 +58,10 @@ def split_continuous(dataset, idx, value):
 
 # find the best feature to split the dataset
 def optimal_split_feat(dataset, is_continuous):
-    feature_num = len(dataset[0]) - 1 # number of features
+    print dataset[0]
+    feature_num = len(dataset[0]) - 1  # number of features
     # print feature_num
-    base_entropy = cal_entropy(dataset) # initial entropy
+    base_entropy = cal_entropy(dataset)  # initial entropy
     best_feature_idx = -1
     best_split_point = 0.0
     max_ig_rate = 0.0
@@ -115,7 +116,7 @@ def createTree(dataSet, attributes, is_continuous):
     if len(dataSet[0]) == 1:
         return majorityCnt(labels) # after traversing all features, return the majority label
     bestIdx, bestSplitPoint = optimal_split_feat(dataSet, is_continuous)
-    print bestIdx
+    print "Best feature index: " + str(bestIdx)
     bestAttr = attributes[bestIdx]
     # print bestIdx, bestAttr
     myTree = {bestAttr: {}}
