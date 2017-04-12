@@ -1,0 +1,114 @@
+
+Shuffle training data...
+
+Accuracy before applying weight: 0.8494623655913979
+
+Weight for each attribute: 
+Customer type: 0.5, Life style: 0.25, Vacation: 1.0, eCredit: 4.0, Average entry salary: 2.0, Property value: 2.0
+
+Accuracy after applying weight: 0.9032258064516129
+
+type:0,lifestyle:1,vacation:0.1746031746031746,eCredit:0.046511627906976744,Salary:0.27029910852579764Property:0.2105543023783003,Product:1
+type:0,lifestyle:3,vacation:0.4444444444444444,eCredit:0.020348837209302327,Salary:0.3305338519257908Property:0.13858399055172763,Product:1
+type:0,lifestyle:0,vacation:0.42857142857142855,eCredit:0.16569767441860464,Salary:0.29912573572436585Property:0.06607633621968352,Product:1
+type:1,lifestyle:2,vacation:0.2222222222222222,eCredit:0.11046511627906977,Salary:0.5486696726671945Property:0.0800360467264087,Product:1
+type:2,lifestyle:1,vacation:0.015873015873015872,eCredit:0.01744186046511628,Salary:0.48244157229890205Property:0.0382464722904784,Product:2
+type:2,lifestyle:2,vacation:0.09523809523809523,eCredit:0.01744186046511628,Salary:0.18079888479675074Property:0.08198951062650778,Product:2
+type:3,lifestyle:2,vacation:0.06349206349206349,eCredit:0.020348837209302327,Salary:0.5324493167659106Property:0.07305059415528078,Product:2
+type:3,lifestyle:1,vacation:0.031746031746031744,eCredit:0.03488372093023256,Salary:0.3469306095756033Property:0.026374561310220142,Product:2
+type:0,lifestyle:1,vacation:0.12698412698412698,eCredit:0.19767441860465115,Salary:0.7396998588786011Property:0.11679922980907549,Product:3
+type:0,lifestyle:2,vacation:0.14285714285714285,eCredit:0.18604651162790697,Salary:0.8003648504457371Property:0.21443884090743717,Product:3
+type:4,lifestyle:2,vacation:0.09523809523809523,eCredit:0.6569767441860465,Salary:0.9509517089457199Property:0.3917786596662879,Product:3
+type:4,lifestyle:1,vacation:0.1111111111111111,eCredit:0.6976744186046512,Salary:0.7237806766943172Property:0.48806371986544056,Product:3
+type:3,lifestyle:2,vacation:0.7936507936507936,eCredit:0.005813953488372093,Salary:0.45057309055863426Property:0.16156097997839436,Product:5
+type:4,lifestyle:2,vacation:0.5238095238095238,eCredit:0.13953488372093023,Salary:0.4901559219357725Property:0.22089254829085903,Product:4
+type:0,lifestyle:3,vacation:0.6031746031746031,eCredit:0.10755813953488372,Salary:0.4643410319072041Property:0.21402463939280297,Product:4
+type:0,lifestyle:3,vacation:0.5555555555555556,eCredit:0.1569767441860465,Salary:0.4776787250886311Property:0.2731491069479505,Product:4
+type:3,lifestyle:3,vacation:0.5238095238095238,eCredit:0.07848837209302326,Salary:0.5336109868171962Property:0.13441958613432442,Product:4
+type:2,lifestyle:3,vacation:0.746031746031746,eCredit:0.09302325581395349,Salary:0.5009121261143427Property:0.1363282714923009,Product:4
+type:3,lifestyle:3,vacation:0.8095238095238095,eCredit:0.005813953488372093,Salary:0.6076136715657591Property:0.12333689695897726,Product:5
+type:1,lifestyle:2,vacation:0.7777777777777778,eCredit:0.040697674418604654,Salary:1.0361408460399961Property:0.06800181353095597,Product:5
+type:1,lifestyle:3,vacation:0.7777777777777778,eCredit:0.03488372093023256,Salary:0.5710425773586205Property:0.11541669232103975,Product:5
+
+0.94375
+Service Type:4  Customer:2  Monthly fee:0.024609843937575027    Advertisement Budget:0.0876993166287016 Size:0  Promotion:1 Interest Rate:0.16666666666666666   Period:0.008928571428571428 Label:1
+Service Type:4  Customer:0  Monthly fee:0.04561824729891957 Advertisement Budget:0.0876993166287016 Size:0  Promotion:1 Interest Rate:0.16666666666666666   Period:0.5446428571428571   Label:1
+Service Type:0  Customer:4  Monthly fee:0.10984393757503    Advertisement Budget:0.3314350797266515 Size:0  Promotion:0 Interest Rate:0.16666666666666666   Period:0.7589285714285714   Label:1
+Service Type:3  Customer:0  Monthly fee:0.051620648259303716    Advertisement Budget:0.11503416856492028    Size:0  Promotion:2 Interest Rate:0.6666666666666666    Period:0.05357142857142857  Label:1
+Service Type:2  Customer:0  Monthly fee:0.051620648259303716    Advertisement Budget:0.1059225512528474 Size:0  Promotion:2 Interest Rate:0.0   Period:0.19642857142857142  Label:1
+Service Type:1  Customer:1  Monthly fee:0.10084033613445377 Advertisement Budget:0.0888382687927107 Size:2  Promotion:3 Interest Rate:0.5   Period:0.09821428571428571  Label:1
+Service Type:1  Customer:3  Monthly fee:0.2262905162064826  Advertisement Budget:0.10364464692482916    Size:2  Promotion:2 Interest Rate:0.16666666666666666   Period:0.14285714285714285  Label:0
+Service Type:1  Customer:2  Monthly fee:0.22448979591836735 Advertisement Budget:0.09339407744874716    Size:2  Promotion:3 Interest Rate:0.0   Period:0.09821428571428571  Label:0
+Service Type:0  Customer:0  Monthly fee:0.8301320528211285  Advertisement Budget:0.5318906605922552 Size:1  Promotion:2 Interest Rate:0.5   Period:0.7142857142857143   Label:1
+Service Type:0  Customer:1  Monthly fee:0.6470588235294117  Advertisement Budget:0.5728929384965832 Size:2  Promotion:2 Interest Rate:0.6666666666666666    Period:0.8839285714285714   Label:1
+Service Type:3  Customer:1  Monthly fee:0.6206482593037215  Advertisement Budget:0.6662870159453304 Size:2  Promotion:2 Interest Rate:0.3333333333333333    Period:0.7232142857142857   Label:1
+Service Type:3  Customer:3  Monthly fee:0.7593037214885955  Advertisement Budget:0.5751708428246014 Size:1  Promotion:2 Interest Rate:0.5   Period:0.7410714285714286   Label:1
+Service Type:3  Customer:0  Monthly fee:0.7989195678271309  Advertisement Budget:0.4043280182232346 Size:2  Promotion:3 Interest Rate:0.16666666666666666   Period:0.7410714285714286   Label:1
+Service Type:2  Customer:0  Monthly fee:0.3175270108043217  Advertisement Budget:0.7961275626423691 Size:1  Promotion:2 Interest Rate:0.16666666666666666   Period:0.75 Label:1
+Service Type:2  Customer:0  Monthly fee:0.3673469387755102  Advertisement Budget:0.4020501138952164 Size:2  Promotion:2 Interest Rate:0.16666666666666666   Period:0.8392857142857143   Label:1
+Service Type:4  Customer:0  Monthly fee:0.11104441776710683 Advertisement Budget:0.030751708428246018   Size:0  Promotion:2 Interest Rate:0.0   Period:0.5535714285714286   Label:0
+Service Type:4  Customer:0  Monthly fee:0.12665066026410565 Advertisement Budget:0.033029612756264246   Size:0  Promotion:2 Interest Rate:0.0   Period:0.625    Label:0
+Service Type:4  Customer:2  Monthly fee:0.11644657863145257 Advertisement Budget:0.07175398633257404    Size:0  Promotion:0 Interest Rate:0.0   Period:0.4732142857142857   Label:0
+Service Type:4  Customer:4  Monthly fee:0.0978391356542617  Advertisement Budget:0.07517084282460136    Size:0  Promotion:3 Interest Rate:0.3333333333333333    Period:0.5625   Label:0
+Service Type:2  Customer:0  Monthly fee:0.0822328931572629  Advertisement Budget:0.0785876993166287 Size:0  Promotion:0 Interest Rate:0.0   Period:0.5982142857142857   Label:0
+Service Type:2  Customer:0  Monthly fee:0.14705882352941177 Advertisement Budget:0.0683371298405467 Size:0  Promotion:0 Interest Rate:0.0   Period:0.5803571428571429   Label:0
+Service Type:0  Customer:1  Monthly fee:0.4579831932773109  Advertisement Budget:0.07630979498861047    Size:2  Promotion:0 Interest Rate:0.3333333333333333    Period:0.9196428571428571   Label:0
+Service Type:0  Customer:1  Monthly fee:0.5192076830732293  Advertisement Budget:0.11845102505694761    Size:2  Promotion:0 Interest Rate:0.16666666666666666   Period:0.8928571428571429   Label:0
+Service Type:0  Customer:0  Monthly fee:0.4237695078031213  Advertisement Budget:0.12984054669703876    Size:2  Promotion:0 Interest Rate:0.16666666666666666   Period:0.9910714285714286   Label:0
+Service Type:0  Customer:4  Monthly fee:0.4213685474189676  Advertisement Budget:0.1252847380410023 Size:2  Promotion:1 Interest Rate:0.16666666666666666   Period:0.8392857142857143   Label:0
+Service Type:0  Customer:2  Monthly fee:0.49939975990396157 Advertisement Budget:0.06492027334851937    Size:1  Promotion:1 Interest Rate:0.0   Period:0.8214285714285714   Label:0
+Service Type:3  Customer:4  Monthly fee:0.3739495798319328  Advertisement Budget:0.07403189066059226    Size:1  Promotion:1 Interest Rate:0.0   Period:0.75 Label:0
+Service Type:3  Customer:2  Monthly fee:0.38415366146458585 Advertisement Budget:0.05922551252847381    Size:1  Promotion:1 Interest Rate:0.16666666666666666   Period:0.5892857142857143   Label:0
+Service Type:3  Customer:4  Monthly fee:0.30912364945978393 Advertisement Budget:0.09681093394077449    Size:2  Promotion:0 Interest Rate:0.3333333333333333    Period:0.6785714285714286   Label:0
+Service Type:3  Customer:0  Monthly fee:0.21368547418967587 Advertisement Budget:0.09339407744874716    Size:2  Promotion:0 Interest Rate:0.0   Period:0.8035714285714286   Label:0
+Service Type:0  Customer:1  Monthly fee:0.29411764705882354 Advertisement Budget:0.40091116173120733    Size:0  Promotion:1 Interest Rate:0.6666666666666666    Period:0.35714285714285715  Label:1
+Service Type:3  Customer:3  Monthly fee:0.20168067226890757 Advertisement Budget:0.6583143507972666 Size:0  Promotion:2 Interest Rate:0.5   Period:0.38392857142857145  Label:1
+Service Type:4  Customer:4  Monthly fee:0.26830732292917164 Advertisement Budget:0.7050113895216401 Size:0  Promotion:2 Interest Rate:0.8333333333333334    Period:0.09821428571428571  Label:1
+Service Type:2  Customer:3  Monthly fee:0.2064825930372149  Advertisement Budget:0.5398633257403189 Size:0  Promotion:0 Interest Rate:0.6666666666666666    Period:0.4375   Label:1
+Service Type:3  Customer:3  Monthly fee:0.7478991596638656  Advertisement Budget:0.5888382687927107 Size:2  Promotion:2 Interest Rate:0.16666666666666666   Period:0.7857142857142857   Label:1
+Service Type:2  Customer:0  Monthly fee:0.4771908763505402  Advertisement Budget:0.48747152619589984    Size:1  Promotion:0 Interest Rate:0.0   Period:0.7321428571428571   Label:1
+Service Type:2  Customer:0  Monthly fee:0.09183673469387756 Advertisement Budget:0.06605922551252848    Size:0  Promotion:3 Interest Rate:0.0   Period:0.5803571428571429   Label:0
+Service Type:0  Customer:4  Monthly fee:0.4873949579831933  Advertisement Budget:0.11161731207289294    Size:2  Promotion:1 Interest Rate:0.16666666666666666   Period:0.9196428571428571   Label:0
+Service Type:3  Customer:1  Monthly fee:0.2418967587034814  Advertisement Budget:0.05239179954441914    Size:2  Promotion:0 Interest Rate:0.0   Period:0.8392857142857143   Label:0
+Service Type:0  Customer:4  Monthly fee:0.23889555822328934 Advertisement Budget:0.5478359908883826 Size:0  Promotion:0 Interest Rate:0.6666666666666666    Period:0.375    Label:1
+
+Service Type:4  Customer:2  Monthly fee:0.024609843937575027    Advertisement Budget:0.0876993166287016 Size:0  Promotion:1 Interest Rate:0.16666666666666666   Period:0.008928571428571428 Label:20.516000000000002
+Service Type:4  Customer:0  Monthly fee:0.04561824729891957 Advertisement Budget:0.0876993166287016 Size:0  Promotion:1 Interest Rate:0.16666666666666666   Period:0.5446428571428571   Label:23.588
+Service Type:0  Customer:4  Monthly fee:0.10984393757503    Advertisement Budget:0.3314350797266515 Size:0  Promotion:0 Interest Rate:0.16666666666666666   Period:0.7589285714285714   Label:31.258000000000003
+Service Type:3  Customer:0  Monthly fee:0.051620648259303716    Advertisement Budget:0.11503416856492028    Size:0  Promotion:2 Interest Rate:0.6666666666666666    Period:0.05357142857142857  Label:26.57
+Service Type:2  Customer:0  Monthly fee:0.051620648259303716    Advertisement Budget:0.1059225512528474 Size:0  Promotion:2 Interest Rate:0.0   Period:0.19642857142857142  Label:26.256
+Service Type:1  Customer:1  Monthly fee:0.10084033613445377 Advertisement Budget:0.0888382687927107 Size:2  Promotion:3 Interest Rate:0.5   Period:0.09821428571428571  Label:22.96
+Service Type:1  Customer:3  Monthly fee:0.2262905162064826  Advertisement Budget:0.10364464692482916    Size:2  Promotion:2 Interest Rate:0.16666666666666666   Period:0.14285714285714285  Label:17.71
+Service Type:1  Customer:2  Monthly fee:0.22448979591836735 Advertisement Budget:0.09339407744874716    Size:2  Promotion:3 Interest Rate:0.0   Period:0.09821428571428571  Label:19.512
+Service Type:0  Customer:0  Monthly fee:0.8301320528211285  Advertisement Budget:0.5318906605922552 Size:1  Promotion:2 Interest Rate:0.5   Period:0.7142857142857143   Label:32.338
+Service Type:0  Customer:1  Monthly fee:0.6470588235294117  Advertisement Budget:0.5728929384965832 Size:2  Promotion:2 Interest Rate:0.6666666666666666    Period:0.8839285714285714   Label:31.842000000000002
+Service Type:3  Customer:1  Monthly fee:0.6206482593037215  Advertisement Budget:0.6662870159453304 Size:2  Promotion:2 Interest Rate:0.3333333333333333    Period:0.7232142857142857   Label:31.862000000000002
+Service Type:3  Customer:3  Monthly fee:0.7593037214885955  Advertisement Budget:0.5751708428246014 Size:1  Promotion:2 Interest Rate:0.5   Period:0.7410714285714286   Label:34.036
+Service Type:3  Customer:0  Monthly fee:0.7989195678271309  Advertisement Budget:0.4043280182232346 Size:2  Promotion:3 Interest Rate:0.16666666666666666   Period:0.7410714285714286   Label:30.919999999999998
+Service Type:2  Customer:0  Monthly fee:0.3175270108043217  Advertisement Budget:0.7961275626423691 Size:1  Promotion:2 Interest Rate:0.16666666666666666   Period:0.75 Label:34.052
+Service Type:2  Customer:0  Monthly fee:0.3673469387755102  Advertisement Budget:0.4020501138952164 Size:2  Promotion:2 Interest Rate:0.16666666666666666   Period:0.8392857142857143   Label:25.408
+Service Type:4  Customer:0  Monthly fee:0.11104441776710683 Advertisement Budget:0.030751708428246018   Size:0  Promotion:2 Interest Rate:0.0   Period:0.5535714285714286   Label:17.622
+Service Type:4  Customer:0  Monthly fee:0.12665066026410565 Advertisement Budget:0.033029612756264246   Size:0  Promotion:2 Interest Rate:0.0   Period:0.625    Label:14.936000000000002
+Service Type:4  Customer:2  Monthly fee:0.11644657863145257 Advertisement Budget:0.07175398633257404    Size:0  Promotion:0 Interest Rate:0.0   Period:0.4732142857142857   Label:15.868
+Service Type:4  Customer:4  Monthly fee:0.0978391356542617  Advertisement Budget:0.07517084282460136    Size:0  Promotion:3 Interest Rate:0.3333333333333333    Period:0.5625   Label:12.41
+Service Type:2  Customer:0  Monthly fee:0.0822328931572629  Advertisement Budget:0.0785876993166287 Size:0  Promotion:0 Interest Rate:0.0   Period:0.5982142857142857   Label:14.962
+Service Type:2  Customer:0  Monthly fee:0.14705882352941177 Advertisement Budget:0.0683371298405467 Size:0  Promotion:0 Interest Rate:0.0   Period:0.5803571428571429   Label:16.074
+Service Type:0  Customer:1  Monthly fee:0.4579831932773109  Advertisement Budget:0.07630979498861047    Size:2  Promotion:0 Interest Rate:0.3333333333333333    Period:0.9196428571428571   Label:23.353999999999996
+Service Type:0  Customer:1  Monthly fee:0.5192076830732293  Advertisement Budget:0.11845102505694761    Size:2  Promotion:0 Interest Rate:0.16666666666666666   Period:0.8928571428571429   Label:23.353999999999996
+Service Type:0  Customer:0  Monthly fee:0.4237695078031213  Advertisement Budget:0.12984054669703876    Size:2  Promotion:0 Interest Rate:0.16666666666666666   Period:0.9910714285714286   Label:17.744
+Service Type:0  Customer:4  Monthly fee:0.4213685474189676  Advertisement Budget:0.1252847380410023 Size:2  Promotion:1 Interest Rate:0.16666666666666666   Period:0.8392857142857143   Label:16.220000000000002
+Service Type:0  Customer:2  Monthly fee:0.49939975990396157 Advertisement Budget:0.06492027334851937    Size:1  Promotion:1 Interest Rate:0.0   Period:0.8214285714285714   Label:17.976
+Service Type:3  Customer:4  Monthly fee:0.3739495798319328  Advertisement Budget:0.07403189066059226    Size:1  Promotion:1 Interest Rate:0.0   Period:0.75 Label:16.81
+Service Type:3  Customer:2  Monthly fee:0.38415366146458585 Advertisement Budget:0.05922551252847381    Size:1  Promotion:1 Interest Rate:0.16666666666666666   Period:0.5892857142857143   Label:15.872
+Service Type:3  Customer:4  Monthly fee:0.30912364945978393 Advertisement Budget:0.09681093394077449    Size:2  Promotion:0 Interest Rate:0.3333333333333333    Period:0.6785714285714286   Label:16.802
+Service Type:3  Customer:0  Monthly fee:0.21368547418967587 Advertisement Budget:0.09339407744874716    Size:2  Promotion:0 Interest Rate:0.0   Period:0.8035714285714286   Label:17.794
+Service Type:0  Customer:1  Monthly fee:0.29411764705882354 Advertisement Budget:0.40091116173120733    Size:0  Promotion:1 Interest Rate:0.6666666666666666    Period:0.35714285714285715  Label:32.870000000000005
+Service Type:3  Customer:3  Monthly fee:0.20168067226890757 Advertisement Budget:0.6583143507972666 Size:0  Promotion:2 Interest Rate:0.5   Period:0.38392857142857145  Label:39.507999999999996
+Service Type:4  Customer:4  Monthly fee:0.26830732292917164 Advertisement Budget:0.7050113895216401 Size:0  Promotion:2 Interest Rate:0.8333333333333334    Period:0.09821428571428571  Label:38.212
+Service Type:2  Customer:3  Monthly fee:0.2064825930372149  Advertisement Budget:0.5398633257403189 Size:0  Promotion:0 Interest Rate:0.6666666666666666    Period:0.4375   Label:35.018
+Service Type:3  Customer:3  Monthly fee:0.7478991596638656  Advertisement Budget:0.5888382687927107 Size:2  Promotion:2 Interest Rate:0.16666666666666666   Period:0.7857142857142857   Label:33.92999999999999
+Service Type:2  Customer:0  Monthly fee:0.4771908763505402  Advertisement Budget:0.48747152619589984    Size:1  Promotion:0 Interest Rate:0.0   Period:0.7321428571428571   Label:33.562
+Service Type:2  Customer:0  Monthly fee:0.09183673469387756 Advertisement Budget:0.06605922551252848    Size:0  Promotion:3 Interest Rate:0.0   Period:0.5803571428571429   Label:16.669999999999998
+Service Type:0  Customer:4  Monthly fee:0.4873949579831933  Advertisement Budget:0.11161731207289294    Size:2  Promotion:1 Interest Rate:0.16666666666666666   Period:0.9196428571428571   Label:16.22
+Service Type:3  Customer:1  Monthly fee:0.2418967587034814  Advertisement Budget:0.05239179954441914    Size:2  Promotion:0 Interest Rate:0.0   Period:0.8392857142857143   Label:17.466
+Service Type:0  Customer:4  Monthly fee:0.23889555822328934 Advertisement Budget:0.5478359908883826 Size:0  Promotion:0 Interest Rate:0.6666666666666666    Period:0.375    Label:36.279999999999994

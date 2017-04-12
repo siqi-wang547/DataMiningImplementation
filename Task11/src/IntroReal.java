@@ -48,17 +48,18 @@ public class IntroReal {
 	public static void main(String[] args) throws IOException {
 	    initialize();
 	    Collections.shuffle(allList);
-//        Product test = parseProduct("Fund,Student,0.64,0.95,Small,Full,0,10");
-//        Map<Product, Double> top5 = getTopK(test, 5);
-//        for (Product p : top5.keySet()) System.out.println(p.toString() + "\t" + top5.get(p));
-//        System.out.println(getPredict(top5));
-        //Set initial data
+	    System.out.println();
+        System.out.println("Shuffle training data...");
+        System.out.println();
+        System.out.println("Accuracy before applying weight: " + calculateAccuracy());
         int increase = 0;
         int decrease = 0;
         double oldAccuracy = calculateAccuracy();
         double currAccuracy = calculateAccuracy();
+        double accuracy = 0;
         
-        while (calculateAccuracy() < 0.9) {
+        while (accuracy < calculateAccuracy()) {
+            accuracy = calculateAccuracy();
             for (int i = 0; i < 8; i++) {
                 oldAccuracy = calculateAccuracy();
                 currAccuracy = calculateAccuracy();
@@ -93,9 +94,15 @@ public class IntroReal {
                 }
             }
         }
-        System.out.println(w[0] + ", " + w[1] + ", " + w[2] + ", " + w[3]
-                  + ", " + w[4] + ", " + w[5] + ", " + w[6] + ", " + w[7]);
-        System.out.println(calculateAccuracy());
+        System.out.println();
+        System.out.println("Weight for each attribute: ");
+        System.out.println("Service type: " + w[0] + ", " + "Customer: " + w[1] + ", " + "Monthly fee: " + w[2] + ", " 
+                + "Advertisement budget: " + w[3]);
+        System.out.println("Size: " +w[4] + ", " + "Promotion: " + w[5]
+                         + ", " + "Interest rate: " + w[6]  + ", " + "Period: " + w[7]);
+        System.out.println();
+        System.out.println("Accuracy after applying weight: " + calculateAccuracy());
+        System.out.println();
         runTest();
 	}
 	

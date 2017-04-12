@@ -42,11 +42,85 @@ public class CheckAccuracyforIntroBinary {
                                 {0, 0.5, 0.4, 1}};
     private static double[] w = {1, 1, 1, 1, 1, 1, 1, 1};
     
+    /**
+     * Inner class.
+     */
+    static class Product {
+        private int service_type;
+        private int customer;
+        private double monthly_fee;
+        private double advertisement_budget;
+        private int size;
+        private int promotion;
+        private double interest_rate;
+        private double period;
+        private int label;
+        public String toString() {
+            return "Service Type:" + service_type + "\tCustomer:" + customer + "\tMonthly fee:" + monthly_fee + "\tAdvertisement Budget:" + advertisement_budget + "\tSize:" + size + "\tPromotion:" + promotion + "\tInterest Rate:" + interest_rate + "\tPeriod:" + period + "\tLabel:" + label;
+        }
+        public int getService_type() {
+            return service_type;
+        }
+        public void setService_type(int service_type) {
+            this.service_type = service_type;
+        }
+        public int getCustomer() {
+            return customer;
+        }
+        public void setCustomer(int customer) {
+            this.customer = customer;
+        }
+        public double getMonthly_fee() {
+            return monthly_fee;
+        }
+        public void setMonthly_fee(double monthly_fee) {
+            this.monthly_fee = monthly_fee;
+        }
+        public double getAdvertisement_budget() {
+            return advertisement_budget;
+        }
+        public void setAdvertisement_budget(double advertisement_budget) {
+            this.advertisement_budget = advertisement_budget;
+        }
+        public int getSize() {
+            return size;
+        }
+        public void setSize(int size) {
+            this.size = size;
+        }
+        public int getPromotion() {
+            return promotion;
+        }
+        public void setPromotion(int promotion) {
+            this.promotion = promotion;
+        }
+        public double getInterest_rate() {
+            return interest_rate;
+        }
+        public void setInterest_rate(double interest_rate) {
+            this.interest_rate = interest_rate;
+        }
+        public double getPeriod() {
+            return period;
+        }
+        public void setPeriod(double period) {
+            this.period = period;
+        }
+        public int getLabel() {
+            return label;
+        }
+        public void setLabel(int label) {
+            this.label = label;
+        }
+    }
 
     public static void main(String[] args) throws IOException {
         initialize();
         Collections.shuffle(allList);
-        System.out.println(calculateAccuracy());
+        System.out.println();
+        System.out.println("Shuffle training data...");
+        System.out.println();
+        System.out.println("Accuracy before applying weight: " + calculateAccuracy());
     }
     
     private static void initialize() throws IOException {
@@ -256,77 +330,5 @@ public class CheckAccuracyforIntroBinary {
             product.setLabel(Integer.parseInt(str[8]));
         }
         return product;
-    }
-    
-    /**
-     * Inner class.
-     */
-    static class Product {
-        private int service_type;
-        private int customer;
-        private double monthly_fee;
-        private double advertisement_budget;
-        private int size;
-        private int promotion;
-        private double interest_rate;
-        private double period;
-        private int label;
-        public String toString() {
-            return "Service Type:" + service_type + "\tCustomer:" + customer + "\tMonthly fee:" + monthly_fee + "\tAdvertisement Budget:" + advertisement_budget + "\tSize:" + size + "\tPromotion:" + promotion + "\tInterest Rate:" + interest_rate + "\tPeriod:" + period + "\tLabel:" + label;
-        }
-        public int getService_type() {
-            return service_type;
-        }
-        public void setService_type(int service_type) {
-            this.service_type = service_type;
-        }
-        public int getCustomer() {
-            return customer;
-        }
-        public void setCustomer(int customer) {
-            this.customer = customer;
-        }
-        public double getMonthly_fee() {
-            return monthly_fee;
-        }
-        public void setMonthly_fee(double monthly_fee) {
-            this.monthly_fee = monthly_fee;
-        }
-        public double getAdvertisement_budget() {
-            return advertisement_budget;
-        }
-        public void setAdvertisement_budget(double advertisement_budget) {
-            this.advertisement_budget = advertisement_budget;
-        }
-        public int getSize() {
-            return size;
-        }
-        public void setSize(int size) {
-            this.size = size;
-        }
-        public int getPromotion() {
-            return promotion;
-        }
-        public void setPromotion(int promotion) {
-            this.promotion = promotion;
-        }
-        public double getInterest_rate() {
-            return interest_rate;
-        }
-        public void setInterest_rate(double interest_rate) {
-            this.interest_rate = interest_rate;
-        }
-        public double getPeriod() {
-            return period;
-        }
-        public void setPeriod(double period) {
-            this.period = period;
-        }
-        public int getLabel() {
-            return label;
-        }
-        public void setLabel(int label) {
-            this.label = label;
-        }
     }
 }

@@ -1,10 +1,8 @@
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -36,6 +34,76 @@ public class CheckAccuracyAndAdjustWeightforSelection {
                                       {0, 0, 0, 1}};
     private static double[] w = {1, 1, 1, 1, 1, 1};
 
+    /**
+     * Inner class for Customer.
+     * @author Youjia
+     */
+    static class Customer {
+        private int type;
+        private int lifeStyle;
+        private double vacation;
+        private double eCredit;
+        private double salary;
+        private double property;
+        private int product;
+        public int getType() {
+            return type;
+        }
+        public void setType(int type) {
+            this.type = type;
+        }
+        public int getLifeStyle() {
+            return lifeStyle;
+        }
+        public void setLifeStyle(int lifeStyle) {
+            this.lifeStyle = lifeStyle;
+        }
+        public double getVacation() {
+            return vacation;
+        }
+        public void setVacation(double vacation) {
+            this.vacation = vacation;
+        }
+        public double geteCredit() {
+            return eCredit;
+        }
+        public void seteCredit(double eCredit) {
+            this.eCredit = eCredit;
+        }
+        public double getSalary() {
+            return salary;
+        }
+        public void setSalary(double salary) {
+            this.salary = salary;
+        }
+        public double getProperty() {
+            return property;
+        }
+        public void setProperty(double property) {
+            this.property = property;
+        }
+        public int getProduct() {
+            return product;
+        }
+        public void setProduct(int product) {
+            this.product = product;
+        }
+        public String toString() {
+            return "type:" + type + ",lifestyle:" + lifeStyle + ",vacation:" + vacation + ",eCredit:" + eCredit + ",Salary:" + salary + "Property:" + property + ",Product:" + product;
+        }
+        public void setW(double a, double b, double c, double d, double e, double f) {
+            w[0] = a;
+            w[1] = b;
+            w[2] = c;
+            w[3] = d;
+            w[4] = e;
+            w[5] = f;
+        }
+        public double[] getW() {
+            return w;
+        }
+    }
+    
     /**
      * load data
      * @throws IOException
@@ -133,13 +201,19 @@ public class CheckAccuracyAndAdjustWeightforSelection {
         initialize();
         //Shuffle the original list
         Collections.shuffle(allList);
+        System.out.println();
+        System.out.println("Shuffle training data...");
+        System.out.println();
+        System.out.println("Accuracy before applying weight: " + calculateAccuracy());
         //Set initial data
         int increase = 0;
         int decrease = 0;
         double oldAccuracy = calculateAccuracy();
         double currAccuracy = calculateAccuracy();
+        double accuracy = 0;
         
-        while (calculateAccuracy() < 0.9) {
+        while (accuracy < calculateAccuracy()) {
+            accuracy = calculateAccuracy();
             for (int i = 0; i < 6; i++) {
                 oldAccuracy = calculateAccuracy();
                 currAccuracy = calculateAccuracy();
@@ -174,8 +248,13 @@ public class CheckAccuracyAndAdjustWeightforSelection {
                 }
             }
         }
-        System.out.println(w[0] + ", " + w[1] + ", " + w[2] + ", " + w[3] + ", " + w[4] + ", " +w[5]);
-        System.out.println(calculateAccuracy());
+        System.out.println();
+        System.out.println("Weight for each attribute: ");
+        System.out.println("Customer type: " + w[0] + ", " + "Life style: " + w[1] + ", " + "Vacation: " + w[2] + ", " 
+                         + "eCredit: " + w[3] + ", " + "Average entry salary: " +w[4] + ", " + "Property value: " + w[5]);
+        System.out.println();
+        System.out.println("Accuracy after applying weight: " + calculateAccuracy());
+        System.out.println();
         runTest();
     }
     /**
@@ -325,76 +404,6 @@ public class CheckAccuracyAndAdjustWeightforSelection {
             }
         }
         return customer;
-    }
-
-    /**
-     * Inner class for Customer.
-     * @author Youjia
-     */
-    static class Customer {
-        private int type;
-        private int lifeStyle;
-        private double vacation;
-        private double eCredit;
-        private double salary;
-        private double property;
-        private int product;
-        public int getType() {
-            return type;
-        }
-        public void setType(int type) {
-            this.type = type;
-        }
-        public int getLifeStyle() {
-            return lifeStyle;
-        }
-        public void setLifeStyle(int lifeStyle) {
-            this.lifeStyle = lifeStyle;
-        }
-        public double getVacation() {
-            return vacation;
-        }
-        public void setVacation(double vacation) {
-            this.vacation = vacation;
-        }
-        public double geteCredit() {
-            return eCredit;
-        }
-        public void seteCredit(double eCredit) {
-            this.eCredit = eCredit;
-        }
-        public double getSalary() {
-            return salary;
-        }
-        public void setSalary(double salary) {
-            this.salary = salary;
-        }
-        public double getProperty() {
-            return property;
-        }
-        public void setProperty(double property) {
-            this.property = property;
-        }
-        public int getProduct() {
-            return product;
-        }
-        public void setProduct(int product) {
-            this.product = product;
-        }
-        public String toString() {
-            return "type:" + type + ",lifestyle:" + lifeStyle + ",vacation:" + vacation + ",eCredit:" + eCredit + ",Salary:" + salary + "Property:" + property + ",Product:" + product;
-        }
-        public void setW(double a, double b, double c, double d, double e, double f) {
-            w[0] = a;
-            w[1] = b;
-            w[2] = c;
-            w[3] = d;
-            w[4] = e;
-            w[5] = f;
-        }
-        public double[] getW() {
-            return w;
-        }
     }
 }
 
