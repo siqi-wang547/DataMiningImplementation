@@ -3,6 +3,7 @@ from math import log
 import operator
 import random
 import json
+import sys
 
 
 def loadData(filepath):
@@ -10,12 +11,18 @@ def loadData(filepath):
     with open(filepath, 'rb') as f:
         for line in f.readlines():
             line = line.strip().split(',')
-            cur = [float(line[i]) if is_continuous[i] else line[i] for i in range(len(line))]
-            matrix.append(cur)
-    #return matrix
+            matrix.append(line)
     random.shuffle(matrix)
-    len = len(matrix) * 9 / 10
-    return matrix[:len], matrix[len+1:]
+    length = len(matrix) * 9 / 10
+    return matrix[:length], matrix[length+1:]
+
+
+def convert_to_float(dataset, is_continuous):
+    matrix = []
+    for data in dataset:
+        cur = [float(data[i]) if is_continuous[i] else data[i] for i in range(len(data))]
+        matrix.append(cur)
+    return matrix
 
 
 # calculate Entropy
@@ -58,7 +65,7 @@ def split_continuous(dataset, idx, value):
 
 # find the best feature to split the dataset
 def optimal_split_feat(dataset, is_continuous):
-    print dataset[0]
+    # print dataset[0]
     feature_num = len(dataset[0]) - 1  # number of features
     # print feature_num
     base_entropy = cal_entropy(dataset)  # initial entropy
@@ -74,12 +81,8 @@ def optimal_split_feat(dataset, is_continuous):
                 subDataSet = split_discrete(dataset, i, value) # for each target value, get its occurrence
                 prob = len(subDataSet) / float(len(dataset))
                 new_entropy += prob * cal_entropy(subDataSet) # cal the entropy
-            # if new_entropy < base_entropy:  # return ith column when entropy reaches minimum
-            #     base_entropy = new_entropy
-            #     best_feature_idx = i
-            # info_gain = base_entropy - new_entropy
             ig_rate = calculate_ig_rate(base_entropy, new_entropy)
-            if ig_rate > max_ig_rate:
+            if ig_rate >= max_ig_rate:
                 max_ig_rate = ig_rate
                 best_feature_idx = i
         else:
@@ -91,7 +94,7 @@ def optimal_split_feat(dataset, is_continuous):
                 new_entropy += len(subDataSet2) / float(len(dataset)) * cal_entropy(subDataSet2)
                 # modification from c45 could be applied IG - log2(N-1)/|D|, N = len(sortedFeature, D = len(dataSet)
                 ig_rate = calculate_ig_rate(base_entropy, new_entropy)
-                if ig_rate > max_ig_rate:
+                if ig_rate >= max_ig_rate:
                     max_ig_rate = ig_rate
                     best_feature_idx = i
                     best_split_point = value
@@ -110,15 +113,14 @@ def majorityCnt(labels):
 
 def createTree(dataSet, attributes, is_continuous):
     labels = [data[-1] for data in dataSet]  # labels in dataset
-    # print len(labels)
-    # if len(dataSet) == 0:
-    #     return ''
     if len(set(labels)) == 1:
         return labels[0] # only one label, return
     if len(dataSet[0]) == 1:
         return majorityCnt(labels) # after traversing all features, return the majority label
     bestIdx, bestSplitPoint = optimal_split_feat(dataSet, is_continuous)
-    print "Best feature index: " + str(bestIdx)
+    if bestIdx == -1: # condition not reachable...
+        return majorityCnt(labels)
+    # print "Best feature index: " + str(bestIdx)
     bestAttr = attributes[bestIdx]
     # print bestIdx, bestAttr
     myTree = {bestAttr: {}}
@@ -131,8 +133,7 @@ def createTree(dataSet, attributes, is_continuous):
             subContinuous = is_continuous[:]
             myTree[bestAttr][value] = createTree(split_discrete(dataSet, bestIdx, value), subAttrs, subContinuous)
     else:
-        print "enter"
-        featureValues = ['< ' + str(bestSplitPoint), '>= ' + str(bestSplitPoint)]
+        featureValues = ['LESSTHAN ' + str(bestSplitPoint), 'NOLESSTHAN ' + str(bestSplitPoint)]
         subsets = split_continuous(dataSet, bestIdx, bestSplitPoint)
         del (is_continuous[bestIdx])
         for i in range(2): # recursively create the tree
@@ -140,22 +141,65 @@ def createTree(dataSet, attributes, is_continuous):
             subAttrs = attributes[:]
             subContinuous = is_continuous[:]
             myTree[bestAttr][value] = createTree(subsets[i], subAttrs, subContinuous)
-        # sample tree structure {'Type': {student: c1, doctor: {'lifes': {>: c2, >>: c3}}}}
     return myTree
 
 
-def calculate_test_accuracy(test, tree):
+def get_label(data, tree):
+    if not isinstance(tree, dict):
+        return tree
+    idx = tree.keys()[0] # '3'
+    #print 'idx = ' + str(idx)
+    tree = tree[idx]
+    keys = tree.keys()
+    #print "keys: " + str(keys)
+    if 'NOLESSTHAN' in keys[0] or 'LESSTHAN' in keys[0]:
+        threshold = keys[0].strip().split(' ')[1]
+        #print threshold, data[int(idx)]
+        if data[int(idx)] >= float(threshold):
+            tree = tree['NOLESSTHAN ' + threshold]
+        else: tree = tree['LESSTHAN ' + threshold]
+    else:
+        tree = tree[data[int(idx)]]
+    return get_label(data, tree)
 
 
+def cross_validation(dataset, tree):
+    correct = 0.0
+    for data in dataset:
+        try:
+            if get_label(data, tree) == data[-1]:
+                correct += 1
+        except:
+            pass
+    return correct / len(dataset)
 
-    return cnt / len(test)
 
-attributes = ['Type', 'LifeStyle', 'Vacation', 'eCredit', 'salary', 'property', 'class']
-is_continuous = [False, False, True, True, True, True, False]
-#filepath = 'train5lines'
-filepath = 'trainProdSelection'
-train, test = loadData(filepath)
+# attributes = ['Type', 'LifeStyle', 'Vacation', 'eCredit', 'salary', 'property', 'class']
+# attributes = ['Service_type', 'Customer', 'Monthly_fee','Advertisement_budget','Size','Promotion','Interest_rate',
+# 'Period','Label']
+# is_continuous = [False, False, True, True, False, False, True, True, False]
+
+#filepath = 'trainProdIntrobin'  # set file path
+filepath = sys.argv[1]
+
+train, test = loadData(filepath)  # get training and testing dataset
+attributes = [i for i in range(len(train[0]))]  # attributes idx using in tree
+is_continuous = [False for i in range(len(train[0]))]
+# if one attribute has >= 10 distinct values, treat it as continuous real variable
+for i in range(len(train[0])):
+    s = [data[i] for data in train]
+    if len(set(s)) >= 10: is_continuous[i] = True
+
+print "attributes indices: \n" + str(attributes)
+print "\natributes continuity: \n" + str(is_continuous)
+print "\nJSON formatted decision tree, please paste it to an online JSON formatter for a better view: \n"
+
+# convert continuous variables in dataset into fload type
+train = convert_to_float(train, is_continuous)
+test = convert_to_float(test, is_continuous)
+
 tree = createTree(train, attributes, is_continuous)
 
 print json.dumps(tree)
 
+print '\nAccuracy = ' + str(cross_validation(test, tree))
